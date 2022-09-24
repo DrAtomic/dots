@@ -1,23 +1,6 @@
-* TODO fixes
-  at some point they changed source code blocks completion from tabbing '<el' to 'C-c C-,' I would like it to be able to do both. that way emacs< 27 can have all the features of this config
 * startup
 Use-package
 #+BEGIN_SRC emacs-lisp
-  (defvar bootstrap-version)
-  (let ((bootstrap-file
-	 (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-	(bootstrap-version 5))
-    (unless (file-exists-p bootstrap-file)
-      (with-current-buffer
-	  (url-retrieve-synchronously
-	   "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-	   'silent 'inhibit-cookies)
-	(goto-char (point-max))
-	(eval-print-last-sexp)))
-    (load bootstrap-file nil 'nomessage))
-  (unless (version< emacs-version "27")
-    (setq package-enable-at-startup nil))
-  (setq straight-use-package-by-default t)
   (package-initialize)
   (require 'package)
   (add-to-list 'package-archives
@@ -29,7 +12,7 @@ Use-package
 #+END_SRC
 
 * loadpath
-  #+begin_src emacs-lips
+  #+begin_src emacs-lisp
   (add-to-list 'load-path "/usr/local/share/emacs/site-lisp")
 #+end_src
 * theme
@@ -45,10 +28,11 @@ Use-package
   (use-package dashboard
     :ensure t
     :config
-      (dashboard-setup-startup-hook)
-      (setq dashboard-startup-banner 'logo)
-      (setq dashboard-center-content t)
-      (setq dashboard-items '((recents . 5))))
+    (dashboard-setup-startup-hook)
+    (setq dashboard-startup-banner 'logo)
+    (setq dashboard-center-content t)
+    (setq dashboard-items '((recents . 5)
+			    (projects . 5))))
 #+END_SRC
 * normal backspace
   #+begin_src emacs-lisp
@@ -56,7 +40,6 @@ Use-package
 #+end_src
 * tmp
 set autosave fiels to .tmp folder
-*requires tmp*
 #+BEGIN_SRC emacs-lisp
 (setq temporary-file-directory "~/.tmp/")
 (setq backup-directory-alist
@@ -93,16 +76,16 @@ visit and reload config
 #+END_SRC
 ** todo
 #+BEGIN_SRC emacs-lisp
-(defun todo-visit ()
-  (interactive)
-  (find-file "~/.Todo.org"))
-(global-set-key (kbd "C-c t") 'todo-visit)
+  (defun todo-visit ()
+    (interactive)
+    (find-file "~/.Todo.org"))
+  (global-set-key (kbd "C-c t") 'todo-visit)
 #+END_SRC
  #+END_SRC
 * orgmode
 ** pdf
-   #+begin_src emacs-lisp
-     (push '("\\.pdf\\'" . emacs) org-file-apps)
+#+begin_src emacs-lisp
+  (push '("\\.pdf\\'" . emacs) org-file-apps)
 #+end_src
 ** bullets
 #+BEGIN_SRC emacs-lisp
@@ -125,8 +108,11 @@ visit and reload config
     (("C-c n l" . org-roam-buffer-toggle)
      ("C-c n f" . org-roam-node-find)
      ("C-c n i" . org-roam-node-insert)
+     ("C-c n d t" . org-roam-dailies-goto-today)
+     ("C-c n d m" . org-roam-dailies-goto-tomorrow)
+     ("C-c n d d" . org-roam-dailies-goto-date)
      :map org-mode-map
-     ("C-M-i"   . completion-at-point))
+	  ("C-M-i"   . completion-at-point))
     :config
     (org-roam-setup))
 #+end_src
@@ -138,7 +124,7 @@ lint for emacs
   :init
   (which-key-mode))
 #+END_SRC
-* term
+* vterm
 terminal for emacs
 #+BEGIN_SRC emacs-lisp
   (unless (version< emacs-version "27.1")
@@ -161,7 +147,7 @@ split window and follow
   (split-window-right)
   (balance-windows)
   (other-window 1))
-(global-set-key (kbd "C-x 3") 'split-and-follow-vertically)
+(global-set-key (kbd "C-x 3") 'split-and-follow-
 #+END_SRC
 ** switch window
 #+BEGIN_SRC emacs-lisp
@@ -260,7 +246,7 @@ its helm
 #+END_SRC
 * word and line wrap
 #+BEGIN_SRC emacs-lisp
-(global-visual-line-mode 1)
+  (global-visual-line-mode 1)
 #+END_SRC
 * company
 #+BEGIN_SRC emacs-lisp
@@ -297,13 +283,6 @@ its helm
     (use-package pyvenv
       :ensure t
       :hook ((python-mode . pyvenv-mode)))
-
-    (use-package company-gambit
-      :straight (company-gambit :type git :host github :repo "DrAtomic/company-gambit")
-      :config
-      (defun my-scheme-mode-hook ()
-	(add-to-list 'company-backends 'company-gambit--backend))
-      (add-hook 'scheme-mode-hook 'my-scheme-mode-hook))
 #+END_SRC
 * yasnippet
 #+BEGIN_SRC emacs-lisp
@@ -321,6 +300,17 @@ its helm
   (use-package common-lisp-snippets
     :ensure t)
 #+END_SRC
+* lsp
+#+begin_src emacs-lisp
+(use-package lsp-mode
+  :ensure t)
+(use-package dap-mode
+  :ensure t)
+ (with-eval-after-load 'lsp-mode
+      (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration)
+      (require 'dap-cpptools)
+      (yas-global-mode))
+#+end_src
 * languages
 ** clojure
 *requires clojure, clj, lein*
@@ -402,16 +392,6 @@ this is magic to me will figure out later
 	       (add-hook 'racket-mode-hook #'racket-unicode-input-method-enable)
 	       (add-hook 'racket-repl-mode-hook #'racket-unicode-input-method-enable))
 #+end_src
-** markdown
-#+begin_src emacs-lisp
-(use-package markdown-mode
-  :ensure t
-  :commands (markdown-mode gfm-mode)
-  :mode (("README\\.md\\'" . gfm-mode)
-         ("\\.md\\'" . markdown-mode)
-         ("\\.markdown\\'" . markdown-mode))
-  :init (setq markdown-command "multimarkdown"))
-#+end_src
 ** gambit
    #+begin_src emacs-lisp
      (autoload 'gambit-inferior-mode "gambit" "Hook Gambit mode into cmuscheme.")
@@ -419,13 +399,6 @@ this is magic to me will figure out later
      (add-hook 'inferior-scheme-mode-hook (function gambit-inferior-mode))
      (add-hook 'scheme-mode-hook (function gambit-mode))
      (setq scheme-program-name "gsi -:d-")
-#+end_src
-** guile
-   #+begin_src emacs-lisp
-     ;; (use-package geiser-guile
-     ;;   :ensure t
-     ;;   :config
-     ;;   (setq geiser-guile-binary "/usr/bin/guile"))
 #+end_src
 ** verilog
    #+begin_src emacs-lisp
@@ -437,7 +410,18 @@ this is magic to me will figure out later
 ** C
    #+begin_src emacs-lisp
      (setq c-default-style "linux")
+     (add-hook 'c-mode-hook 'lsp)
    #+end_src
+** markdown
+#+begin_src emacs-lisp
+(use-package markdown-mode
+  :ensure t
+  :commands (markdown-mode gfm-mode)
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
+  :init (setq markdown-command "multimarkdown"))
+#+end_src
 * magit
 #+begin_src emacs-lisp
 (use-package magit
@@ -454,13 +438,6 @@ this is magic to me will figure out later
   (require 'ox-beamer)
 (define-key org-mode-map (kbd "C-c >") (lambda () (interactive (org-time-stamp-interactive))))
 #+end_src
-* scmutils
-#+begin_src emacs-lisp
-(defun mechanics ()
-  (interactive)
-  (run-scheme 
-    "/bin/scheme --library ~/Thirdparty/scmutils-20200810"))
-#+end_src
 * reveal
   #+begin_src emacs-lisp
     (use-package ox-reveal
@@ -471,31 +448,29 @@ this is magic to me will figure out later
       :ensure t)
   #+end_src
 * visual regexp
-  #+begin_src emacs-lisp
-    (use-package visual-regexp
-      :ensure t)  
+#+begin_src emacs-lisp
+  (use-package visual-regexp
+    :ensure t)
 #+end_src
-
 * expand region
 #+begin_src emacs-lisp
   (use-package expand-region
     :bind ("C-=" . er/expand-region))
 #+end_src
-
 * microlisp
 #+begin_src emacs-lisp
-    (setq ulisp-term-buffer-name "/dev/ttyUSB0")
+  (setq ulisp-term-buffer-name "/dev/ttyUSB0")
 
-    (defun ulisp-eval-last-expression-in-term ()
-      (interactive)
-      (let ((expr (buffer-substring-no-properties  
-			 (save-excursion (backward-sexp) (point))
-			 (point))))
-	  (with-current-buffer ulisp-term-buffer-name
-	      (insert expr)
-	      (term-send-input))))
+  (defun ulisp-eval-last-expression-in-term ()
+    (interactive)
+    (let ((expr (buffer-substring-no-properties
+		 (save-excursion (backward-sexp) (point))
+		 (point))))
+      (with-current-buffer ulisp-term-buffer-name
+	(insert expr)
+	(term-send-input))))
 
-    (global-set-key (kbd "C-x e") 'ulisp-eval-last-expression-in-term)
+  (global-set-key (kbd "C-x e") 'ulisp-eval-last-expression-in-term)
   (defun setup-ulisp-workspace ()
     (interactive)
 
@@ -505,6 +480,17 @@ this is magic to me will figure out later
     (serial-term "/dev/ttyUSB0" 9600)
     (term-line-mode)
 
-    (other-window 1)
-    )
+    (other-window 1))
+#+end_src
+
+* tramp
+#+begin_src emacs-lisp
+(setq tramp-terminal-type "dumb")
+#+end_src
+* projectile
+#+begin_src emacs-lisp
+  (use-package projectile
+    :ensure t
+    :config
+    (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
 #+end_src
