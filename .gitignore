@@ -1,0 +1,5 @@
+# ignore everything in emacs
+emacs/.emacs.d/*
+
+!emacs/.emacs.d/config.org
+!emacs/.emacs.d/init.el
