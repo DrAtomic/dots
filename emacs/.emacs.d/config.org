@@ -392,13 +392,15 @@ this is magic to me will figure out later
 	       (add-hook 'racket-mode-hook #'racket-unicode-input-method-enable)
 	       (add-hook 'racket-repl-mode-hook #'racket-unicode-input-method-enable))
 #+end_src
-** gambit
-   #+begin_src emacs-lisp
-     (autoload 'gambit-inferior-mode "gambit" "Hook Gambit mode into cmuscheme.")
-     (autoload 'gambit-mode "gambit" "Hook Gambit mode into scheme.")
-     (add-hook 'inferior-scheme-mode-hook (function gambit-inferior-mode))
-     (add-hook 'scheme-mode-hook (function gambit-mode))
-     (setq scheme-program-name "gsi -:d-")
+** markdown
+#+begin_src emacs-lisp
+(use-package markdown-mode
+  :ensure t
+  :commands (markdown-mode gfm-mode)
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
+  :init (setq markdown-command "multimarkdown"))
 #+end_src
 ** verilog
    #+begin_src emacs-lisp
