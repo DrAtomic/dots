@@ -10,16 +10,8 @@ terminal for emacs
 
 
 
-* visual regexp
-#+begin_src emacs-lisp
-  (use-package visual-regexp
-    :ensure t)
-#+end_src
-* expand region
-#+begin_src emacs-lisp
-  (use-package expand-region
-    :bind ("C-=" . er/expand-region))
-#+end_src
+
+
 * microlisp
 #+begin_src emacs-lisp
   (setq ulisp-term-buffer-name "/dev/ttyUSB0")
