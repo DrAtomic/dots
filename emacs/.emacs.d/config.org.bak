@@ -6,7 +6,6 @@ terminal for emacs
 	    :ensure t))
 #+END_SRC
 
-
 * yasnippet
 #+BEGIN_SRC emacs-lisp
   (use-package yasnippet
@@ -158,12 +157,6 @@ this is magic to me will figure out later
          ("\\.md\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode))
   :init (setq markdown-command "multimarkdown"))
-#+end_src
-* magit
-#+begin_src emacs-lisp
-(use-package magit
-  :ensure t
-  :bind (("C-x g" . magit-status)))
 #+end_src
 * line number
 #+begin_src emacs-lisp

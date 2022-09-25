@@ -265,3 +265,9 @@ its helm
 		'((dot . t))))
 #+END_SRC
 
+* magit
+#+begin_src emacs-lisp
+  (use-package magit
+    :ensure t
+    :bind (("C-x g" . magit-status)))
+#+end_src
