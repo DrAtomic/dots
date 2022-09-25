@@ -6,21 +6,6 @@ terminal for emacs
 	    :ensure t))
 #+END_SRC
 
-
-* lsp
-#+begin_src emacs-lisp
-  (use-package lsp-mode
-    :ensure t)
-  
-  (use-package dap-mode
-    :ensure t)
-
-  (with-eval-after-load 'lsp-mode
-    (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration)
-    (require 'dap-cpptools)
-    (yas-global-mode))
-#+end_src
-
 * languages
 ** clojure
 *requires clojure, clj, lein*
