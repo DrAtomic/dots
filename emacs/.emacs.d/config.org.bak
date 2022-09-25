@@ -6,46 +6,7 @@ terminal for emacs
 	    :ensure t))
 #+END_SRC
 
-* word and line wrap
-#+BEGIN_SRC emacs-lisp
-  (global-visual-line-mode 1)
-#+END_SRC
-* company
-#+BEGIN_SRC emacs-lisp
-    (use-package company
-      :ensure t
-      :init
-    (add-hook 'after-init-hook 'global-company-mode))
-    (setq org-confirm-babel-evaluate nil)
-    (add-to-list 'org-structure-template-alist
-    '("el" . "src emacs-lisp"))
-    (add-to-list 'org-structure-template-alist
-    '("p" . "src python")
-    (org-babel-do-load-languages
-    'org-babel-load-languages
-    '((dot . t))))
-  (add-to-list 'org-structure-template-alist
-    '("t" . "src tcl")
-    (org-babel-do-load-languages
-    'org-babel-load-languages
-    '((dot . t))))
-    (with-eval-after-load 'company
-      (define-key company-active-map (kbd "M-n") nil)
-      (define-key company-active-map (kbd "M-p") nil)
-      (define-key company-active-map (kbd "C-n") #'company-select-next)
-      (define-key company-active-map (kbd "C-p") #'company-select-previous))
 
-    (use-package company-jedi
-      :ensure t
-      :config
-      (defun my/python-mode-hook ()
-	(add-to-list 'company-backends 'company-jedi))
-      (add-hook 'python-mode-hook 'my/python-mode-hook))
-
-    (use-package pyvenv
-      :ensure t
-      :hook ((python-mode . pyvenv-mode)))
-#+END_SRC
 * yasnippet
 #+BEGIN_SRC emacs-lisp
   (use-package yasnippet
@@ -114,21 +75,33 @@ this is magic to me will figure out later
 #+END_SRC
 ** python
 #+BEGIN_SRC emacs-lisp
+  (use-package pyvenv
+    :ensure t
+    :hook ((python-mode . pyvenv-mode)))
+
   (use-package elpy
     :ensure t
     :defer t
     :init
     (advice-add 'python-mode :before 'elpy-enable))
+
   (setq python-shell-completion-native-enable nil)
   (setq elpy-shell-use-project-root t )
   (setq elpy-rpc-virtualenv-path 'current)
 
   (setq elpy-shell-starting-directory (quote current-directory))
+
   (use-package pyenv-mode
     :ensure t)
-; set this to whichever you have
+					  ; set this to whichever you have
   (setenv "WORKON_HOME" "~/.conda/envs")
   (pyvenv-mode 1)
+  (use-package company-jedi
+    :ensure t
+    :config
+    (defun my/python-mode-hook ()
+      (add-to-list 'company-backends 'company-jedi))
+    (add-hook 'python-mode-hook 'my/python-mode-hook))
 #+END_SRC
 ** latex
 #+BEGIN_SRC emacs-lisp
