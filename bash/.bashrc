@@ -26,7 +26,12 @@ GREEN='\033[38;5;118m'
 RED='\033[38;5;196m'
 WHITE='\033[0m'
 
-export PS1="${BLUE}[\h]${TEAL}[\u]${GREEN}[\w]${RED}\$(parse_git_branch)${WHITE}\n: "
+YELLOW='\033[38;5;227m'
+SEAFOAM='\033[38;5;84m'
+LIGHTBLUE='\033[38;5;123m'
+PINK='\033[38;5;174m'
+
+export PS1="${YELLOW}[\h]${SEAFOAM}[\u]${LIGHTBLUE}[\w]${PINK}\$(parse_git_branch)${WHITE}\n: "
 
 if [ -e ~/.bash_aliases ]; then
     source ~/.bash_aliases
