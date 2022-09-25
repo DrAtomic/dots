@@ -33,25 +33,7 @@ Use-package
     :config
     (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 #+END_SRC
-** org-roam
-#+begin_src emacs-lisp
-  (use-package org-roam
-    :ensure t
-    :custom
-    (org-roam-directory  "~/Notes")
-    (org-roam-complete-everywhere t)
-    :bind
-    (("C-c n l" . org-roam-buffer-toggle)
-     ("C-c n f" . org-roam-node-find)
-     ("C-c n i" . org-roam-node-insert)
-     ("C-c n d t" . org-roam-dailies-goto-today)
-     ("C-c n d m" . org-roam-dailies-goto-tomorrow)
-     ("C-c n d d" . org-roam-dailies-goto-date)
-     :map org-mode-map
-     ("C-M-i"   . completion-at-point))
-    :config
-    (org-roam-setup))
-#+end_src
+
 * theme
 #+begin_src emacs-lisp
   (use-package dracula-theme
