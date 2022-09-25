@@ -15,6 +15,10 @@ Use-package
   (add-to-list 'load-path "/usr/local/share/emacs/site-lisp")
 #+end_src
 * orgmode
+#+begin_src emacs-lisp
+  (use-package org
+    :ensure t)
+#+end_src
 ** pdf
 #+begin_src emacs-lisp
   (push '("\\.pdf\\'" . emacs) org-file-apps)
