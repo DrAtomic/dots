@@ -1,11 +1,3 @@
-* which key
-lint for emacs
-#+BEGIN_SRC emacs-lisp
-(use-package which-key
-  :ensure t
-  :init
-  (which-key-mode))
-#+END_SRC
 * vterm
 terminal for emacs
 #+BEGIN_SRC emacs-lisp

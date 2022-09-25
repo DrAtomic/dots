@@ -138,3 +138,12 @@ split window and follow
   :bind
   ([remap other-window] . switch-window))
 #+END_SRC
+
+* which key
+lint for emacs
+#+BEGIN_SRC emacs-lisp
+  (use-package which-key
+    :ensure t
+    :init
+    (which-key-mode))
+#+END_SRC
