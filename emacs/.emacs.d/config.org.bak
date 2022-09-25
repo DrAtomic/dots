@@ -6,8 +6,37 @@ terminal for emacs
 	    :ensure t))
 #+END_SRC
 
+* lsp
+#+begin_src emacs-lisp
+  (use-package lsp-mode
+    :ensure t)
+  
+  (use-package dap-mode
+    :ensure t)
 
+  (with-eval-after-load 'lsp-mode
+    (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration)
+    (require 'dap-cpptools)
+    (yas-global-mode))
+#+end_src
 
+* yasnippet
+#+BEGIN_SRC emacs-lisp
+  (use-package yasnippet
+    :ensure t)
+
+  (use-package yasnippet-snippets
+    :ensure t)
+
+  (yas-reload-all)
+  (define-key yas-minor-mode-map (kbd "<tab>") nil)
+  (define-key yas-minor-mode-map (kbd "TAB") nil)
+  (define-key yas-minor-mode-map (kbd "<C-tab>") 'yas-expand)
+  (yas-global-mode 1)
+
+  (use-package common-lisp-snippets
+    :ensure t)
+#+END_SRC
 * languages
 ** clojure
 *requires clojure, clj, lein*
