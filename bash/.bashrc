@@ -20,18 +20,13 @@ parse_git_branch() {
      git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/[\1]/'
 }
 
-BLUE='\033[38;5;027m'
-TEAL='\033[38;5;050m'
-GREEN='\033[38;5;118m'
-RED='\033[38;5;196m'
-WHITE='\033[0m'
-
 YELLOW='\033[38;5;227m'
 SEAFOAM='\033[38;5;84m'
 LIGHTBLUE='\033[38;5;123m'
-PINK='\033[38;5;174m'
+SALMON='\033[38;5;209m'
+NONE='\033[0m'
 
-export PS1="${YELLOW}[\h]${SEAFOAM}[\u]${LIGHTBLUE}[\w]${PINK}\$(parse_git_branch)${WHITE}\n: "
+export PS1="${YELLOW}[\h]${SEAFOAM}[\u]${LIGHTBLUE}[\w]${SALMON}\$(parse_git_branch)${NONE}\n: "
 
 if [ -e ~/.bash_aliases ]; then
     source ~/.bash_aliases
