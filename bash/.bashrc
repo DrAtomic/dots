@@ -20,8 +20,13 @@ parse_git_branch() {
      git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/[\1]/'
 }
 
-# export PS1="\w > "
-export PS1="\[\033[38;5;027m\][\h]\[\033[38;5;050m\][\u]\[\033[38;5;057m\]\[\033[38;5;118m\][\w]\[\033[38;5;196m\]\$(parse_git_branch)\[\033[0m\]\n: "
+BLUE='\033[38;5;027m'
+TEAL='\033[38;5;050m'
+GREEN='\033[38;5;118m'
+RED='\033[38;5;196m'
+WHITE='\033[0m'
+
+export PS1="${BLUE}[\h]${TEAL}[\u]${GREEN}[\w]${RED}\$(parse_git_branch)${WHITE}\n: "
 
 if [ -e ~/.bash_aliases ]; then
     source ~/.bash_aliases
