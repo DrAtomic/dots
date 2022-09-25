@@ -302,3 +302,18 @@ its helm
     (require 'dap-cpptools)
     (yas-global-mode))
 #+end_src
+* line number
+#+begin_src emacs-lisp
+  (setq display-line-numbers-type 'relative)
+  (global-display-line-numbers-mode)
+#+end_src
+
+* reveal
+#+begin_src emacs-lisp
+  (use-package ox-reveal
+    :ensure t)
+  (setq org-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js")
+  (setq org-reveal-mathjax t)
+  (use-package htmlize
+    :ensure t)
+#+end_src
