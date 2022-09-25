@@ -98,3 +98,28 @@ remove ugly things and make things pretty
   (setq ring-bell-function 'ignore)
   (setq scroll-conservatively 100)
 #+END_SRC
+
+* config
+visit and reload config
+** visit
+#+BEGIN_SRC emacs-lisp
+  (defun config-visit ()
+    (interactive)
+    (find-file "~/.emacs.d/config.org"))
+  (global-set-key (kbd "C-c e") 'config-visit)
+#+END_SRC
+** reload
+#+BEGIN_SRC emacs-lisp
+  (defun config-reload ()
+    "Reloads ~/.emacs.d/config.org at runtime"
+    (interactive)
+    (org-babel-load-file (expand-file-name "~/.emacs.d/config.org")))
+  (global-set-key (kbd "C-c r") 'config-reload)
+#+END_SRC
+** todo
+#+BEGIN_SRC emacs-lisp
+  (defun todo-visit ()
+    (interactive)
+    (find-file "~/.Todo.org"))
+  (global-set-key (kbd "C-c t") 'todo-visit)
+#+END_SRC
