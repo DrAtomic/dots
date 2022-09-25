@@ -271,3 +271,21 @@ its helm
     :ensure t
     :bind (("C-x g" . magit-status)))
 #+end_src
+
+* yasnippet
+#+BEGIN_SRC emacs-lisp
+  (use-package yasnippet
+      :ensure t)
+  
+  (use-package yasnippet-snippets
+    :ensure t)
+
+  (yas-reload-all)
+  (define-key yas-minor-mode-map (kbd "<tab>") nil)
+  (define-key yas-minor-mode-map (kbd "TAB") nil)
+  (define-key yas-minor-mode-map (kbd "<C-tab>") 'yas-expand)
+  (yas-global-mode 1)
+
+  (use-package common-lisp-snippets
+    :ensure t)
+#+END_SRC
