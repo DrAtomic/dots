@@ -6,16 +6,6 @@ terminal for emacs
 	    :ensure t))
 #+END_SRC
 
-* multiple cursors
-#+BEGIN_SRC emacs-lisp
-  (use-package multiple-cursors
-  :ensure t
-
-  :bind ( "C-c m C-c m" . mc/edit-lines)
-  ("C->" . mc/mark-next-like-this)
-  ("C-<" . mc/mark-previous-like-this)
-  ("C-c m c" . mc/mark-all-like-this))
-#+END_SRC
 * helm
 its helm
 #+BEGIN_SRC emacs-lisp
