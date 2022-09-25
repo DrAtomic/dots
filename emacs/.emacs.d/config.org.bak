@@ -6,44 +6,6 @@ terminal for emacs
 	    :ensure t))
 #+END_SRC
 
-
-
-
-
-
-
-* microlisp
-#+begin_src emacs-lisp
-  (setq ulisp-term-buffer-name "/dev/ttyUSB0")
-
-  (defun ulisp-eval-last-expression-in-term ()
-    (interactive)
-    (let ((expr (buffer-substring-no-properties
-		 (save-excursion (backward-sexp) (point))
-		 (point))))
-      (with-current-buffer ulisp-term-buffer-name
-	(insert expr)
-	(term-send-input))))
-
-  (global-set-key (kbd "C-x e") 'ulisp-eval-last-expression-in-term)
-  (defun setup-ulisp-workspace ()
-    (interactive)
-
-    (split-window-right)
-    (other-window 1)
-
-    (serial-term "/dev/ttyUSB0" 9600)
-    (term-line-mode)
-
-    (other-window 1))
-#+end_src
-
-* tramp
-#+begin_src emacs-lisp
-(setq tramp-terminal-type "dumb")
-#+end_src
-
-
 * org-roam
 #+begin_src emacs-lisp
   (use-package org-roam
