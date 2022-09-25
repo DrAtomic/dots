@@ -6,46 +6,6 @@ terminal for emacs
 	    :ensure t))
 #+END_SRC
 
-* delimiters
-** electric pairs
-wraps delimiters
-#+BEGIN_SRC emacs-lisp
-(setq electric-pair-pairs '(
-                            (?\{ . ?\})
-                            (?\[ . ?\])
-                            (?\" . ?\")
-                            (?\( . ?\))
-                            ))
-(electric-pair-mode 1)
-#+END_SRC
-** rainbow delimiters
-   color delimiters
-#+BEGIN_SRC emacs-lisp
-(use-package rainbow-delimiters
-  :ensure t
-  :init
-  (progn
-    (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)))
-#+END_SRC
-** paren mode
-   #+begin_src emacs-lisp
-     (show-paren-mode 1)
-   #+end_src
-** paredit
-a bit annoying a bit nice
-#+BEGIN_SRC emacs-lisp
-  (use-package paredit
-    :ensure t
-    :config
-    (add-hook 'emacs-lisp-mode-hook #'paredit-mode)
-    ;; enable in the *scratch* buffer
-    (add-hook 'lisp-interaction-mode-hook #'paredit-mode)
-    (add-hook 'ielm-mode-hook #'paredit-mode)
-    (add-hook 'lisp-mode-hook #'paredit-mode)
-    (add-hook 'eval-expression-minibuffer-setup-hook #'paredit-mode)
-    (add-hook 'racket-mode-hook 'enable-paredit-mode)
-    (add-hook 'scheme-mode-hook #'paredit-mode))
-#+END_SRC
 * multiple cursors
 #+BEGIN_SRC emacs-lisp
   (use-package multiple-cursors
