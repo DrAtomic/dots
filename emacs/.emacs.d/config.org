@@ -19,6 +19,15 @@ Use-package
   (use-package org
     :ensure t)
 #+end_src
+** org agenda
+#+begin_src emacs-lisp
+  (setq org-agenda-files '("~/Notes/daily/"))
+  (setq org-agenda-timegrid-use-ampm t)
+  (global-set-key (kbd "C-c l") #'org-store-link)
+  (global-set-key (kbd "C-c a") #'org-agenda)
+  (global-set-key (kbd "C-c c") #'org-capture)
+  (setq org-default-notes-file  "~/Notes/captures.org")
+#+end_src
 ** org-roam
 #+begin_src emacs-lisp
   (use-package org-roam
@@ -52,7 +61,21 @@ Use-package
     :config
     (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 #+END_SRC
-
+** GTD
+#+begin_src emacs-lisp
+  (setq org-agenda-custom-commands
+	'(("g" "GTD view"
+	   ((agenda)
+	    (todo "NEXT" ((org-agenda-overriding-header "Next actions:")))
+	    (todo "WAITING" ((org-agenda-overriding-header "Waiting on:")))
+	    (todo "DONE" ((org-agenda-overriding-header "Completed items:")))
+	    (tags "projects" ((org-agenda-overriding-header "Projects in progress:")))))))
+#+end_src
+** flyspell
+#+begin_src emacs-lisp
+  (add-hook 'org-mode-hook 'turn-on-flyspell)
+  (add-hook 'markdown-mode-hook 'turn-on-flyspell)
+#+end_src
 * theme
 #+begin_src emacs-lisp
   (use-package dracula-theme
@@ -66,6 +89,7 @@ Use-package
   (use-package projectile
     :ensure t
     :config
+    (projectile-mode +1)
     (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
 #+end_src
 
@@ -121,10 +145,9 @@ visit and reload config
 #+BEGIN_SRC emacs-lisp
   (defun todo-visit ()
     (interactive)
-    (find-file "~/.Todo.org"))
+    (find-file "~/Notes/next.org"))
   (global-set-key (kbd "C-c t") 'todo-visit)
 #+END_SRC
-
 * window
 ** split window
 split window and follow
@@ -166,7 +189,6 @@ lint for emacs
     :init
     (which-key-mode))
 #+END_SRC
-
 * delimiters
 ** electric pairs
 wraps delimiters
@@ -259,9 +281,8 @@ its helm
   (use-package company
     :ensure t
     :init
-    (add-hook 'after-init-hook 'global-company-mode))
-
-  (with-eval-after-load 'company
+    (add-hook 'after-init-hook 'global-company-mode)
+    :config
     (define-key company-active-map (kbd "M-n") nil)
     (define-key company-active-map (kbd "M-p") nil)
     (define-key company-active-map (kbd "C-n") #'company-select-next)
@@ -311,8 +332,14 @@ its helm
 * lsp
 #+begin_src emacs-lisp
   (use-package lsp-mode
-    :ensure t)
-  
+    :ensure t
+    :config
+    (progn (lsp-register-client
+	    (make-lsp-client :new-connection (lsp-tramp-connection "clangd")
+			     :major-modes '(c-mode)
+			     :remote? t
+			     :server-id 'clangd-remote))))
+
   (use-package dap-mode
     :ensure t)
 
@@ -326,7 +353,6 @@ its helm
   (setq display-line-numbers-type 'relative)
   (global-display-line-numbers-mode)
 #+end_src
-
 * reveal
 #+begin_src emacs-lisp
   (use-package ox-reveal
@@ -348,7 +374,6 @@ its helm
     :ensure t
     :bind ("C-=" . er/expand-region))
 #+end_src
-
 * microlisp
 #+begin_src emacs-lisp
   (setq ulisp-term-buffer-name "/dev/ttyUSB0")
@@ -451,6 +476,10 @@ its helm
 #+begin_src emacs-lisp
   (setq c-default-style "linux")
   (add-hook 'c-mode-hook 'lsp)
+  (with-eval-after-load 'lsp-mode
+    (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration)
+    (require 'dap-cpptools)
+    (yas-global-mode))
 #+end_src
 ** markdown
 #+begin_src emacs-lisp
