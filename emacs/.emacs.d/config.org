@@ -78,10 +78,10 @@ Use-package
 #+end_src
 * theme
 #+begin_src emacs-lisp
-  (use-package dracula-theme
+  (use-package gruber-darker-theme
     :ensure t
     :config
-    (load-theme 'dracula t))
+    (load-theme 'gruber-darker t))
   (set-face-attribute 'default nil :font "DejaVu Sans Mono" :height 190)
 #+end_src
 * projectile
