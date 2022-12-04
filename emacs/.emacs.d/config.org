@@ -389,11 +389,15 @@ its helm
 
 * vterm
 #+BEGIN_SRC emacs-lisp
+  (defun nolinum ()
+    (display-line-numbers-mode -1))
+
   (unless (version< emacs-version "27.1")
     (use-package vterm
       :ensure t))
-#+END_SRC
 
+  (add-hook 'vterm-mode-hook 'nolinum)
+#+END_SRC
 * languages
 ** python
 #+BEGIN_SRC emacs-lisp
