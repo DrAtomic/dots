@@ -329,24 +329,10 @@ its helm
     :ensure t)
 #+END_SRC
 
-* lsp
+* eglot
 #+begin_src emacs-lisp
-  (use-package lsp-mode
-    :ensure t
-    :config
-    (progn (lsp-register-client
-	    (make-lsp-client :new-connection (lsp-tramp-connection "clangd")
-			     :major-modes '(c-mode)
-			     :remote? t
-			     :server-id 'clangd-remote))))
-
-  (use-package dap-mode
+  (use-package eglot
     :ensure t)
-
-  (with-eval-after-load 'lsp-mode
-    (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration)
-    (require 'dap-cpptools)
-    (yas-global-mode))
 #+end_src
 * line number
 #+begin_src emacs-lisp
@@ -475,11 +461,7 @@ its helm
 ** C
 #+begin_src emacs-lisp
   (setq c-default-style "linux")
-  (add-hook 'c-mode-hook 'lsp)
-  (with-eval-after-load 'lsp-mode
-    (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration)
-    (require 'dap-cpptools)
-    (yas-global-mode))
+  (add-hook 'c-mode-hook 'eglot-ensure)
 #+end_src
 ** markdown
 #+begin_src emacs-lisp
