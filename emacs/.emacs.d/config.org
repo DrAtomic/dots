@@ -398,6 +398,19 @@ its helm
 
   (add-hook 'vterm-mode-hook 'nolinum)
 #+END_SRC
+* whitespace
+#+begin_src emacs-lisp
+  (setq whitespace-line-column 250)
+  (setq whitespace-display-mappings
+	'((space-mark   ?\    [?\xB7]     [?.])	; space
+	  (space-mark   ?\xA0 [?\xA4]     [?_])	; hard space
+	  (tab-mark     ?\t   [?\xBB ?\t] [?\\ ?\t])))
+  
+  (defun whitespace-handling ()
+    (interactive)
+    (whitespace-mode 1)
+    (add-to-list 'write-file-functions 'delete-trailing-whitespace))
+#+end_src
 * languages
 ** python
 #+BEGIN_SRC emacs-lisp
@@ -466,6 +479,7 @@ its helm
 #+begin_src emacs-lisp
   (setq c-default-style "linux")
   (add-hook 'c-mode-hook 'eglot-ensure)
+  (add-hook 'c-mode-hook 'whitespace-handling)
 #+end_src
 ** markdown
 #+begin_src emacs-lisp
