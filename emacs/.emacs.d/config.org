@@ -411,6 +411,11 @@ its helm
     (whitespace-mode 1)
     (add-to-list 'write-file-functions 'delete-trailing-whitespace))
 #+end_src
+* cmake
+#+begin_src emacs-lisp
+  (use-package cmake-mode
+    :ensure t)
+#+end_src
 * languages
 ** python
 #+BEGIN_SRC emacs-lisp
