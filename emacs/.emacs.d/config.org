@@ -416,6 +416,14 @@ its helm
   (use-package cmake-mode
     :ensure t)
 #+end_src
+* flymake
+#+begin_src emacs-lisp
+  (use-package flymake
+    :ensure t
+    :config
+    (define-key flymake-mode-map (kbd "M-n") 'flymake-goto-next-error)
+    (define-key flymake-mode-map (kbd "M-p") 'flymake-goto-prev-error))
+#+end_src
 * languages
 ** python
 #+BEGIN_SRC emacs-lisp
