@@ -387,17 +387,6 @@ its helm
 (setq tramp-terminal-type "dumb")
 #+end_src
 
-* vterm
-#+BEGIN_SRC emacs-lisp
-  (defun nolinum ()
-    (display-line-numbers-mode -1))
-
-  (unless (version< emacs-version "27.1")
-    (use-package vterm
-      :ensure t))
-
-  (add-hook 'vterm-mode-hook 'nolinum)
-#+END_SRC
 * whitespace
 #+begin_src emacs-lisp
   (setq whitespace-line-column 250)
@@ -424,6 +413,17 @@ its helm
     (define-key flymake-mode-map (kbd "M-n") 'flymake-goto-next-error)
     (define-key flymake-mode-map (kbd "M-p") 'flymake-goto-prev-error))
 #+end_src
+* ansi-colors
+#+begin_src emacs-lisp
+  (use-package ansi-color
+    :ensure t)
+
+  (defun colorize-compilation-buffer ()
+    (let ((inhibit-read-only t))
+      (ansi-color-apply-on-region (point-min) (point-max))))
+
+  (add-hook 'compilation-filter-hook 'colorize-compilation-buffer)
+#+end_src
 * mu4e
 ** message-view-patch
 #+begin_src emacs-lisp
@@ -446,6 +446,17 @@ its helm
     (setq mu4e-trash-folder  "/[Gmail]/Trash"))
   (add-hook 'gnus-part-display-hook 'message-view-patch-highlight)
 #+end_src
+* vterm
+#+BEGIN_SRC emacs-lisp
+  (defun nolinum ()
+    (display-line-numbers-mode -1))
+
+  (unless (version< emacs-version "27.1")
+    (use-package vterm
+      :ensure t))
+
+  (add-hook 'vterm-mode-hook 'nolinum)
+#+END_SRC
 * languages
 ** python
 #+BEGIN_SRC emacs-lisp
