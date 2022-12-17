@@ -407,11 +407,12 @@ its helm
 #+end_src
 * flymake
 #+begin_src emacs-lisp
+  (global-unset-key (kbd "M-m"))
   (use-package flymake
     :ensure t
     :config
-    (define-key flymake-mode-map (kbd "M-n") 'flymake-goto-next-error)
-    (define-key flymake-mode-map (kbd "M-p") 'flymake-goto-prev-error))
+    (define-key flymake-mode-map (kbd "M-m p") 'flymake-goto-next-error)
+    (define-key flymake-mode-map (kbd "M-m n") 'flymake-goto-prev-error))
 #+end_src
 * ansi-colors
 #+begin_src emacs-lisp
@@ -479,6 +480,14 @@ its helm
 
   (add-hook 'vterm-mode-hook 'nolinum)
 #+END_SRC
+* move-text
+#+begin_src emacs-lisp
+  (use-package move-text
+    :ensure t
+    :config
+    (global-set-key (kbd "M-p") 'move-text-up)
+    (global-set-key (kbd "M-n") 'move-text-down))
+#+end_src
 * languages
 ** python
 #+BEGIN_SRC emacs-lisp
