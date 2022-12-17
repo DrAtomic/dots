@@ -424,6 +424,22 @@ its helm
 
   (add-hook 'compilation-filter-hook 'colorize-compilation-buffer)
 #+end_src
+* duplicate-line
+#+begin_src emacs-lisp
+  (defun rc/duplicate-line ()
+    "Duplicate current line"
+    (interactive)
+    (let ((column (- (point) (point-at-bol)))
+	  (line (let ((s (thing-at-point 'line t)))
+		  (if s (string-remove-suffix "\n" s) ""))))
+      (move-end-of-line 1)
+      (newline)
+      (insert line)
+      (move-beginning-of-line 1)
+      (forward-char column)))
+
+  (global-set-key (kbd "C-,") 'rc/duplicate-line)
+#+end_src
 * compile
 #+begin_src emacs-lisp
   (global-set-key (kbd "<f5>") 'compile)
