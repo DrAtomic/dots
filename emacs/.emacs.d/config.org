@@ -411,8 +411,8 @@ its helm
   (use-package flymake
     :ensure t
     :config
-    (define-key flymake-mode-map (kbd "M-m p") 'flymake-goto-next-error)
-    (define-key flymake-mode-map (kbd "M-m n") 'flymake-goto-prev-error))
+    (define-key flymake-mode-map (kbd "M-m n") 'flymake-goto-next-error)
+    (define-key flymake-mode-map (kbd "M-m p") 'flymake-goto-prev-error))
 #+end_src
 * ansi-colors
 #+begin_src emacs-lisp
