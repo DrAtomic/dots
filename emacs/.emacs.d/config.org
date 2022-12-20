@@ -333,6 +333,8 @@ its helm
 #+begin_src emacs-lisp
   (use-package eglot
     :ensure t)
+
+  (setq eldoc-echo-area-use-multiline-p nil)
 #+end_src
 * line number
 #+begin_src emacs-lisp
