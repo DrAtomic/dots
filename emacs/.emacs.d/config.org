@@ -559,6 +559,8 @@ its helm
   (setq c-default-style "linux")
   (add-hook 'c-mode-hook 'eglot-ensure)
   (add-hook 'c-mode-hook 'whitespace-handling)
+  (add-hook 'c-mode-hook 'column-number-mode)
+  (add-hook 'c-mode-hook (lambda () (c-toggle-comment-style -1)))
 #+end_src
 ** markdown
 #+begin_src emacs-lisp
