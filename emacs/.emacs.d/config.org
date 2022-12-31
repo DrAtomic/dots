@@ -251,7 +251,7 @@ its helm
     ("M-x" . 'helm-M-x)
     :config
     (set-face-attribute 'helm-selection nil
-			:background "purple"
+			:background "darkgreen"
 			:foreground "yellow")
     (setq helm-autoresize-max-height 0
 	  helm-autoresize-min-height 40
