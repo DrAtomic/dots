@@ -3,3 +3,8 @@ emacs/.emacs.d/*
 
 !emacs/.emacs.d/config.org
 !emacs/.emacs.d/init.el
+!emacs/.emacs.d/packages/highlight/highlight.el
+!emacs/.emacs.d/packages/facemenu/facemenu+.el
+!emacs/.emacs.d/packages/eyedropper/eyedropper.el
+!emacs/.emacs.d/packages/hexrgb/hexrgb.el
+

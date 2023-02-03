@@ -13,6 +13,10 @@ Use-package
 * loadpath
 #+begin_src emacs-lisp
   (add-to-list 'load-path "/usr/local/share/emacs/site-lisp")
+  (add-to-list 'load-path "~/.emacs.d/packages/highlight")
+  (add-to-list 'load-path "~/.emacs.d/packages/facemenu")
+  (add-to-list 'load-path "~/.emacs.d/packages/eyedropper")
+  (add-to-list 'load-path "~/.emacs.d/packages/hexrgb")
 #+end_src
 * orgmode
 #+begin_src emacs-lisp
@@ -449,6 +453,11 @@ its helm
   (global-set-key (kbd "<f5>") 'compile)
   (setq compilation-scroll-output 'first-error)
   (add-hook 'compilation-finish-functions 'switch-to-buffer-other-window 'compilation)
+#+end_src
+* highlight
+#+begin_src emacs-lisp
+  (require 'facemenu+)
+  (require 'highlight)
 #+end_src
 * mu4e
 ** message-view-patch
