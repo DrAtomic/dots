@@ -17,6 +17,7 @@ Use-package
   (add-to-list 'load-path "~/.emacs.d/packages/facemenu")
   (add-to-list 'load-path "~/.emacs.d/packages/eyedropper")
   (add-to-list 'load-path "~/.emacs.d/packages/hexrgb")
+  (add-to-list 'load-path "~/.emacs.d/packages/hl-wrapper")
 #+end_src
 * orgmode
 #+begin_src emacs-lisp
@@ -458,6 +459,12 @@ its helm
 #+begin_src emacs-lisp
   (require 'facemenu+)
   (require 'highlight)
+  (require 'hl-wrapper)
+  (global-set-key (kbd "C-c h b") 'hl-wrapper-highlight-region-blue)
+  (global-set-key (kbd "C-c h r") 'hl-wrapper-highlight-region-red)
+  (global-set-key (kbd "C-c h y") 'hl-wrapper-highlight-region-yellow)
+  (global-set-key (kbd "C-c h g") 'hl-wrapper-highlight-region-green)
+  (global-set-key (kbd "C-c h u") 'hl-wrapper-unhighlight-region)
 #+end_src
 * mu4e
 ** message-view-patch
