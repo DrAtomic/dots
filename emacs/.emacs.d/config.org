@@ -26,15 +26,27 @@ Use-package
 #+end_src
 ** org agenda
 #+begin_src emacs-lisp
-  (setq org-agenda-files '("~/Notes/daily/"))
+  (setq org-agenda-files '("~/Documents/gtd/inbox.org" "~/Documents/gtd/projects.org" "~/Documents/gtd/schedule.org"))
   (setq org-agenda-timegrid-use-ampm t)
   (global-set-key (kbd "C-c l") #'org-store-link)
   (global-set-key (kbd "C-c a") #'org-agenda)
   (global-set-key (kbd "C-c c") #'org-capture)
-  (setq org-default-notes-file  "~/Notes/captures.org")
 #+end_src
 ** org-roam
 #+begin_src emacs-lisp
+  ;; depends
+  (use-package dash
+    :ensure t)
+  (use-package f
+    :ensure t)
+  (use-package s
+    :ensure t)
+  (use-package org
+    :ensure t)
+  (use-package emacsql
+    :ensure t)
+  (use-package emacsql-sqlite-module
+    :ensure t)
   (use-package org-roam
     :ensure t
     :custom
@@ -68,13 +80,46 @@ Use-package
 #+END_SRC
 ** GTD
 #+begin_src emacs-lisp
+  (setq org-capture-templates '(("t" "Todo [inbox]" entry
+				 (file+headline "~/Documents/gtd/inbox.org" "Tasks")
+				 "* TODO %i%?")
+				("s" "Schedule" entry
+				 (file+headline "~/Documents/gtd/schedule.org" "Schedule")
+				 "* %i%? \n %U")))
+  (setq org-refile-targets '(("~/Documents/gtd/projects.org" :maxlevel . 3)
+			     ("~/Documents/gtd/someday.org" :level . 1)
+			     ("~/Documents/gtd/schedule.org" :maxlevel . 2)))
+  (setq org-default-notes-file  "~/Documents/gtd/inbox.org")
+
   (setq org-agenda-custom-commands
-	'(("g" "GTD view"
-	   ((agenda)
-	    (todo "NEXT" ((org-agenda-overriding-header "Next actions:")))
-	    (todo "WAITING" ((org-agenda-overriding-header "Waiting on:")))
-	    (todo "DONE" ((org-agenda-overriding-header "Completed items:")))
-	    (tags "projects" ((org-agenda-overriding-header "Projects in progress:")))))))
+	'(("n" todo "TODO"
+	   ((org-agenda-overriding-header "nexts")
+	    (org-agenda-skip-function #'skip-all-but-first)))
+	  ("h" "at home" tags-todo "@home"
+	   ((org-agenda-overriding-header "Home")
+	    (org-agenda-skip-function #'skip-all-but-first)))
+	  ("e" "embedded" tags-todo "embedded"
+	   ((org-agenda-overriding-header "Embedded")
+	    (org-agenda-skip-function #'skip-all-but-first)))
+	  ("s" "server" tags-todo "server"
+	   ((org-agenda-overriding-header "Server")
+	    (org-agenda-skip-function #'skip-all-but-first)))))
+
+  (defun skip-all-but-first ()
+    "skips all but first non-done"
+    (let (should-skip-entry)
+      (unless (org-current-is-todo)
+	(setq should-skip-entry t))
+      (save-excursion
+	(while (and (not should-skip-entry) (org-goto-sibling t))
+	  (when (org-current-is-todo)
+	    (setq should-skip-entry t))))
+      (when should-skip-entry
+	(or (outline-next-heading)
+	    (goto-char (point-max))))))
+
+  (defun org-current-is-todo ()
+    (string= "TODO" (org-get-todo-state)))
 #+end_src
 ** flyspell
 #+begin_src emacs-lisp
@@ -150,7 +195,7 @@ visit and reload config
 #+BEGIN_SRC emacs-lisp
   (defun todo-visit ()
     (interactive)
-    (find-file "~/Notes/next.org"))
+    (find-file "~/Documents/gtd/inbox.org"))
   (global-set-key (kbd "C-c t") 'todo-visit)
 #+END_SRC
 * window
@@ -310,12 +355,6 @@ its helm
 		'org-babel-load-languages
 		'((dot . t))))
 #+END_SRC
-* magit
-#+begin_src emacs-lisp
-  (use-package magit
-    :ensure t
-    :bind (("C-x g" . magit-status)))
-#+end_src
 
 * yasnippet
 #+BEGIN_SRC emacs-lisp
@@ -334,7 +373,12 @@ its helm
   (use-package common-lisp-snippets
     :ensure t)
 #+END_SRC
-
+* magit
+#+begin_src emacs-lisp
+  (use-package magit
+    :ensure t
+    :bind (("C-x g" . magit-status)))
+#+end_src
 * eglot
 #+begin_src emacs-lisp
   (use-package eglot
@@ -406,8 +450,7 @@ its helm
   
   (defun whitespace-handling ()
     (interactive)
-    (whitespace-mode 1)
-    (add-to-list 'write-file-functions 'delete-trailing-whitespace))
+    (whitespace-mode 1))
 #+end_src
 * cmake
 #+begin_src emacs-lisp
