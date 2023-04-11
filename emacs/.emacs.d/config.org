@@ -86,7 +86,7 @@ Use-package
 				 "* TODO %i%?")
 				("s" "Schedule" entry
 				 (file+headline "~/Documents/gtd/schedule.org" "Schedule")
-				 "* %i%? \n %U")))
+				 "* %i%? \n SCHEDULED: %^T")))
   (setq org-refile-targets '(("~/Documents/gtd/projects.org" :maxlevel . 3)
 			     ("~/Documents/gtd/someday.org" :level . 1)
 			     ("~/Documents/gtd/schedule.org" :maxlevel . 2)))
