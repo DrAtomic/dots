@@ -658,5 +658,8 @@ emacs garbage collection to stop stuttering on 29.1
   (add-hook 'c-mode-hook 'column-number-mode)
   (add-hook 'c-mode-hook (lambda () (c-toggle-comment-style -1)))
 #+end_src
+** dts
 #+begin_src emacs-lisp
+  (use-package dts-mode
+    :ensure t)
 #+end_src
