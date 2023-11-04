@@ -516,8 +516,8 @@ its helm
 #+end_src
 * compile
 #+begin_src emacs-lisp
-  (global-set-key (kbd "<f5>") 'compile)
-  (setq compilation-scroll-output 'first-error)
+  (global-set-key (kbd "<f5>") 'projectile-compile-project)
+  (setq compilation-scroll-output t)
   (add-hook 'compilation-finish-functions 'switch-to-buffer-other-window 'compilation)
 #+end_src
 * gcmh
