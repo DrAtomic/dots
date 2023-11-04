@@ -653,11 +653,7 @@ emacs garbage collection to stop stuttering on 29.1
 #+end_src
 ** C
 #+begin_src emacs-lisp
-  (defun c-remove-tabs ()
-         (setq indent-tabs-mode nil))
-
-  (setq c-default-style "k&r" c-basic-offset 4)
-  (add-hook 'c-mode-hook 'c-remove-tabs)
+  (setq c-default-style "linux")
   (add-hook 'c-mode-hook 'whitespace-handling)
   (add-hook 'c-mode-hook 'column-number-mode)
   (add-hook 'c-mode-hook (lambda () (c-toggle-comment-style -1)))
