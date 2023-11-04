@@ -380,12 +380,32 @@ its helm
     :ensure t
     :bind (("C-x g" . magit-status)))
 #+end_src
-* eglot
+* lsp
 #+begin_src emacs-lisp
-  (use-package eglot
+  (use-package lsp-mode
+    :ensure t
+    :hook
+    (c-mode . lsp)
+    (lsp-mode . lsp-enable-which-key-integration)
+    :config
+    ;; to stop the annoying inlay hints
+    ;; .clangd
+    ;; -------
+    ;; InlayHints:
+    ;;   Enabled: No
+    ;; ---------
+    (setq eldoc-echo-area-use-multiline-p nil))
+
+  (use-package lsp-ui
     :ensure t)
 
-  (setq eldoc-echo-area-use-multiline-p nil)
+  (use-package helm-lsp
+    :ensure t)
+
+  (use-package dap-mode
+    :ensure t)
+  ;; M-x dap-cpptools-setup
+  (require 'dap-cpptools)
 #+end_src
 * line number
 #+begin_src emacs-lisp
@@ -638,7 +658,6 @@ emacs garbage collection to stop stuttering on 29.1
 
   (setq c-default-style "k&r" c-basic-offset 4)
   (add-hook 'c-mode-hook 'c-remove-tabs)
-  (add-hook 'c-mode-hook 'eglot-ensure)
   (add-hook 'c-mode-hook 'whitespace-handling)
   (add-hook 'c-mode-hook 'column-number-mode)
   (add-hook 'c-mode-hook (lambda () (c-toggle-comment-style -1)))
