@@ -403,7 +403,12 @@ its helm
     :ensure t)
 
   (use-package dap-mode
-    :ensure t)
+    :ensure t
+    :bind
+    (("C-c d r" . dap-debug)
+     ("C-c d b" . dap-breakpoint-add)
+     ("C-c d d" . dap-breakpoint-delete)
+     ("C-c d h" . dap-hydra)))
   ;; M-x dap-cpptools-setup
   (require 'dap-cpptools)
 #+end_src
