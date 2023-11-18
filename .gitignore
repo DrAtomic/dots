@@ -7,4 +7,5 @@ emacs/.emacs.d/*
 !emacs/.emacs.d/packages/facemenu/facemenu+.el
 !emacs/.emacs.d/packages/eyedropper/eyedropper.el
 !emacs/.emacs.d/packages/hexrgb/hexrgb.el
+!emacs/.emacs.d/packages/gcmh/gcmh.el
 

@@ -1,5 +1,4 @@
 * startup
-Use-package
 #+BEGIN_SRC emacs-lisp
   (package-initialize)
   (require 'package)
@@ -13,11 +12,6 @@ Use-package
 * loadpath
 #+begin_src emacs-lisp
   (add-to-list 'load-path "/usr/local/share/emacs/site-lisp")
-  (add-to-list 'load-path "~/.emacs.d/packages/highlight")
-  (add-to-list 'load-path "~/.emacs.d/packages/facemenu")
-  (add-to-list 'load-path "~/.emacs.d/packages/eyedropper")
-  (add-to-list 'load-path "~/.emacs.d/packages/hexrgb")
-  (add-to-list 'load-path "~/.emacs.d/packages/hl-wrapper")
   (add-to-list 'load-path "~/.emacs.d/packages/gcmh")
 #+end_src
 * orgmode
@@ -143,7 +137,6 @@ Use-package
     (projectile-mode +1)
     (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
 #+end_src
-
 * dashboard
 #+BEGIN_SRC emacs-lisp
   (use-package dashboard
@@ -165,7 +158,6 @@ set autosave fiels to .tmp folder
 	`((".*" ,temporary-file-directory t)))
 #+END_SRC
 * pretty emacs
-remove ugly things and make things pretty
 #+BEGIN_SRC emacs-lisp
   (tool-bar-mode -1)
   (menu-bar-mode -1)
@@ -174,7 +166,6 @@ remove ugly things and make things pretty
   (setq ring-bell-function 'ignore)
   (setq scroll-conservatively 100)
 #+END_SRC
-
 * config
 visit and reload config
 ** visit
@@ -233,7 +224,6 @@ split window and follow
 #+END_SRC
 
 * which key
-lint for emacs
 #+BEGIN_SRC emacs-lisp
   (use-package which-key
     :ensure t
@@ -242,7 +232,6 @@ lint for emacs
 #+END_SRC
 * delimiters
 ** electric pairs
-wraps delimiters
 #+BEGIN_SRC emacs-lisp
   (setq electric-pair-pairs '(
 			      (?\{ . ?\})
@@ -253,7 +242,6 @@ wraps delimiters
   (electric-pair-mode 1)
 #+END_SRC
 ** rainbow delimiters
-   color delimiters
 #+BEGIN_SRC emacs-lisp
   (use-package rainbow-delimiters
     :ensure t
@@ -266,22 +254,20 @@ wraps delimiters
    (show-paren-mode 1)
  #+end_src
 ** paredit
-a bit annoying a bit nice
 #+BEGIN_SRC emacs-lisp
-  (use-package paredit
-    :ensure t
-    :config
-    (add-hook 'emacs-lisp-mode-hook #'paredit-mode)
-    ;; enable in the *scratch* buffer
-    (add-hook 'lisp-interaction-mode-hook #'paredit-mode)
-    (add-hook 'ielm-mode-hook #'paredit-mode)
-    (add-hook 'lisp-mode-hook #'paredit-mode)
-    (add-hook 'eval-expression-minibuffer-setup-hook #'paredit-mode)
-    (add-hook 'racket-mode-hook 'enable-paredit-mode)
-    (add-hook 'scheme-mode-hook #'paredit-mode))
+    (use-package paredit
+      :ensure t
+      :config
+      (add-hook 'emacs-lisp-mode-hook #'paredit-mode)
+      ;; enable in the *scratch* buffer
+      (add-hook 'lisp-interaction-mode-hook #'paredit-mode)
+      (add-hook 'ielm-mode-hook #'paredit-mode)
+      (add-hook 'lisp-mode-hook #'paredit-mode)
+      (add-hook 'eval-expression-minibuffer-setup-hook #'paredit-mode))
 #+END_SRC
 
 * multiple cursors
+
 #+BEGIN_SRC emacs-lisp
   (use-package multiple-cursors
     :ensure t
@@ -292,7 +278,6 @@ a bit annoying a bit nice
 #+END_SRC
 
 * helm
-its helm
 #+BEGIN_SRC emacs-lisp
   (use-package helm
     :ensure t
@@ -349,12 +334,18 @@ its helm
 	       '("p" . "src python")
 	       (org-babel-do-load-languages
 		'org-babel-load-languages
-		'((dot . t))))
+		'((python . t))))
   (add-to-list 'org-structure-template-alist
-	       '("t" . "src tcl")
+	       '("cc" . "src c")
 	       (org-babel-do-load-languages
 		'org-babel-load-languages
-		'((dot . t))))
+		'((C . t))))
+  (add-to-list 'org-structure-template-alist
+	       '("sh" . "src bash")
+	       (org-babel-do-load-languages
+		'org-babel-load-languages
+		'((shell . t))))
+
 #+END_SRC
 
 * yasnippet
@@ -427,38 +418,11 @@ its helm
     :ensure t)
 #+end_src
 
-* visual regexp
-#+begin_src emacs-lisp
-  (use-package visual-regexp
-    :ensure t)
-#+end_src
 * expand region
 #+begin_src emacs-lisp
   (use-package expand-region
     :ensure t
     :bind ("C-=" . er/expand-region))
-#+end_src
-* microlisp
-#+begin_src emacs-lisp
-  (setq ulisp-term-buffer-name "/dev/ttyUSB0")
-
-  (defun ulisp-eval-last-expression-in-term ()
-    (interactive)
-    (let ((expr (buffer-substring-no-properties
-		 (save-excursion (backward-sexp) (point))
-		 (point))))
-      (with-current-buffer ulisp-term-buffer-name
-	(insert expr)
-	(term-send-input))))
-
-  (global-set-key (kbd "C-x e") 'ulisp-eval-last-expression-in-term)
-  (defun setup-ulisp-workspace ()
-    (interactive)
-    (split-window-right)
-    (other-window 1)
-    (serial-term "/dev/ttyUSB0" 9600)
-    (term-line-mode)
-    (other-window 1))
 #+end_src
 * tramp
 #+begin_src emacs-lisp
@@ -539,50 +503,6 @@ emacs garbage collection to stop stuttering on 29.1
     :config
     (gcmh-mode +1))
 #+end_src
-* highlight
-#+begin_src emacs-lisp
-  (require 'facemenu+)
-  (require 'highlight)
-  (require 'hl-wrapper)
-  (global-set-key (kbd "C-c h b") 'hl-wrapper-highlight-region-blue)
-  (global-set-key (kbd "C-c h r") 'hl-wrapper-highlight-region-red)
-  (global-set-key (kbd "C-c h y") 'hl-wrapper-highlight-region-yellow)
-  (global-set-key (kbd "C-c h g") 'hl-wrapper-highlight-region-green)
-  (global-set-key (kbd "C-c h u") 'hl-wrapper-unhighlight-region)
-#+end_src
-* mu4e
-** message-view-patch
-#+begin_src emacs-lisp
-  (use-package message-view-patch
-    :ensure t)
-#+end_src
-** mu4e
-#+begin_src emacs-lisp
-  (use-package mu4e
-    :ensure nil
-    :config
-    (setq mu4e-change-filenames-when-moving t)
-    (setq mu4e-update-interval 7200)
-    (setq mu4e-get-mail-command "mbsync -a")
-    (setq mu4e-maildir "~/Mail")
-
-    (setq mu4e-drafts-folder "/[Gmail]/Drafts")
-    (setq mu4e-sent-folder   "/[Gmail]/Sent Mail")
-    (setq mu4e-refile-folder "/[Gmail]/All Mail")
-    (setq mu4e-trash-folder  "/[Gmail]/Trash"))
-  (add-hook 'gnus-part-display-hook 'message-view-patch-highlight)
-#+end_src
-* vterm
-#+BEGIN_SRC emacs-lisp
-  (defun nolinum ()
-    (display-line-numbers-mode -1))
-
-  (unless (version< emacs-version "27.1")
-    (use-package vterm
-      :ensure t))
-
-  (add-hook 'vterm-mode-hook 'nolinum)
-#+END_SRC
 * move-text
 #+begin_src emacs-lisp
   (use-package move-text
@@ -612,15 +532,6 @@ emacs garbage collection to stop stuttering on 29.1
 
   (use-package pyenv-mode
     :ensure t)
-					  ; set this to whichever you have
-  (setenv "WORKON_HOME" "~/.conda/envs")
-  (pyvenv-mode 1)
-  (use-package company-jedi
-    :ensure t
-    :config
-    (defun my/python-mode-hook ()
-      (add-to-list 'company-backends 'company-jedi))
-    (add-hook 'python-mode-hook 'my/python-mode-hook))
 #+END_SRC
 ** latex
 #+BEGIN_SRC emacs-lisp
@@ -630,14 +541,6 @@ emacs garbage collection to stop stuttering on 29.1
   (setq org-latex-create-formula-image-program 'dvipng)
   (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
 #+END_SRC
-** lisp
-#+begin_src emacs-lisp
-  (use-package sly-asdf
-    :ensure t)
-  (use-package sly
-    :ensure t)
-  (setq inferior-lisp-program "/usr/local/bin/sbcl")
-#+end_src
 ** markdown
 #+begin_src emacs-lisp
   (use-package markdown-mode
