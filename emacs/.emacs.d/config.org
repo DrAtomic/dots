@@ -369,6 +369,7 @@ split window and follow
 #+begin_src emacs-lisp
   (use-package magit
     :ensure t
+    :hook ((git-commit-setup . git-commit-turn-on-flyspell))
     :bind (("C-x g" . magit-status)))
 #+end_src
 * lsp
