@@ -1,5 +1,5 @@
 * startup
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (package-initialize)
   (require 'package)
   (add-to-list 'package-archives
@@ -8,35 +8,71 @@
     (package-refresh-contents)
     (package-install 'use-package))
   (add-to-list 'default-frame-alist '(fullscreen . maximized))
-#+END_SRC
-* loadpath
-#+begin_src emacs-lisp
-  (add-to-list 'load-path "/usr/local/share/emacs/site-lisp")
-  (add-to-list 'load-path "~/.emacs.d/packages/gcmh")
 #+end_src
 * orgmode
 #+begin_src emacs-lisp
   (use-package org
-    :ensure t)
-#+end_src
-** org agenda
-#+begin_src emacs-lisp
-  (setq org-agenda-files '("~/Documents/gtd/inbox.org" "~/Documents/gtd/projects.org" "~/Documents/gtd/schedule.org"))
-  (setq org-agenda-timegrid-use-ampm t)
-  (global-set-key (kbd "C-c l") #'org-store-link)
-  (global-set-key (kbd "C-c a") #'org-agenda)
-  (global-set-key (kbd "C-c c") #'org-capture)
+    :ensure t
+    :bind
+    (("C-c l" . org-store-link)
+     ("C-c a" . org-agenda)
+     ("C-c c" . org-capture))
+    :hook
+    ((org-mode . turn-on-flyspell))
+    :custom
+      ((org-agenda-files '("~/Documents/gtd/inbox.org" "~/Documents/gtd/projects.org" "~/Documents/gtd/schedule.org"))
+      (org-agenda-timegrid-use-ampm t)
+
+      (org-capture-templates '(("t" "Todo [inbox]" entry
+				   (file+headline "~/Documents/gtd/inbox.org" "Tasks")
+				   "* TODO %i%?")
+				  ("s" "Schedule" entry
+				   (file+headline "~/Documents/gtd/schedule.org" "Schedule")
+				   "* %i%? \n SCHEDULED: %^T")))
+
+      (org-refile-targets '(("~/Documents/gtd/projects.org" :maxlevel . 3)
+			    ("~/Documents/gtd/someday.org" :level . 1)
+			    ("~/Documents/gtd/schedule.org" :maxlevel . 2)))
+
+      (org-default-notes-file  "~/Documents/gtd/inbox.org")
+
+      (org-agenda-custom-commands
+       '(("n" todo "TODO"
+	  ((org-agenda-overriding-header "nexts")
+	   (org-agenda-skip-function #'skip-all-but-first)))
+	 ("h" "at home" tags-todo "@home"
+	  ((org-agenda-overriding-header "Home")
+	   (org-agenda-skip-function #'skip-all-but-first)))
+	 ("e" "embedded" tags-todo "embedded"
+	  ((org-agenda-overriding-header "Embedded")
+	   (org-agenda-skip-function #'skip-all-but-first)))
+	 ("s" "server" tags-todo "server"
+	  ((org-agenda-overriding-header "Server")
+	   (org-agenda-skip-function #'skip-all-but-first))))))
+      :config
+      (defun skip-all-but-first ()
+	"skips all but first non-done"
+	(let (should-skip-entry)
+	  (unless (org-current-is-todo)
+	    (setq should-skip-entry t))
+	  (save-excursion
+	    (while (and (not should-skip-entry) (org-goto-sibling t))
+	      (when (org-current-is-todo)
+		(setq should-skip-entry t))))
+	  (when should-skip-entry
+	    (or (outline-next-heading)
+		(goto-char (point-max))))))
+
+      (defun org-current-is-todo ()
+	(string= "TODO" (org-get-todo-state))))
 #+end_src
 ** org-roam
 #+begin_src emacs-lisp
-  ;; depends
   (use-package dash
     :ensure t)
   (use-package f
     :ensure t)
   (use-package s
-    :ensure t)
-  (use-package org
     :ensure t)
   (use-package emacsql
     :ensure t)
@@ -44,6 +80,7 @@
     :ensure t)
   (use-package org-roam
     :ensure t
+    :after (dash f s org emacsql emacsql-sqlite-module)
     :custom
     (org-roam-directory  "~/Notes")
     (org-roam-complete-everywhere t)
@@ -59,10 +96,6 @@
     :config
     (org-roam-setup))
 #+end_src
-** pdf
-#+begin_src emacs-lisp
-  (push '("\\.pdf\\'" . emacs) org-file-apps)
-#+end_src
 ** bullets
 #+BEGIN_SRC emacs-lisp
   (use-package org-bullets
@@ -70,83 +103,39 @@
     :init
     (setq org-bullets-bullet-list
 	  '( "◉" "●" "○" "•"))
-    :config
-    (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+    :hook
+    ((org-mode . (lambda () (org-bullets-mode 1)))))
 #+END_SRC
-** GTD
-#+begin_src emacs-lisp
-  (setq org-capture-templates '(("t" "Todo [inbox]" entry
-				 (file+headline "~/Documents/gtd/inbox.org" "Tasks")
-				 "* TODO %i%?")
-				("s" "Schedule" entry
-				 (file+headline "~/Documents/gtd/schedule.org" "Schedule")
-				 "* %i%? \n SCHEDULED: %^T")))
-  (setq org-refile-targets '(("~/Documents/gtd/projects.org" :maxlevel . 3)
-			     ("~/Documents/gtd/someday.org" :level . 1)
-			     ("~/Documents/gtd/schedule.org" :maxlevel . 2)))
-  (setq org-default-notes-file  "~/Documents/gtd/inbox.org")
-
-  (setq org-agenda-custom-commands
-	'(("n" todo "TODO"
-	   ((org-agenda-overriding-header "nexts")
-	    (org-agenda-skip-function #'skip-all-but-first)))
-	  ("h" "at home" tags-todo "@home"
-	   ((org-agenda-overriding-header "Home")
-	    (org-agenda-skip-function #'skip-all-but-first)))
-	  ("e" "embedded" tags-todo "embedded"
-	   ((org-agenda-overriding-header "Embedded")
-	    (org-agenda-skip-function #'skip-all-but-first)))
-	  ("s" "server" tags-todo "server"
-	   ((org-agenda-overriding-header "Server")
-	    (org-agenda-skip-function #'skip-all-but-first)))))
-
-  (defun skip-all-but-first ()
-    "skips all but first non-done"
-    (let (should-skip-entry)
-      (unless (org-current-is-todo)
-	(setq should-skip-entry t))
-      (save-excursion
-	(while (and (not should-skip-entry) (org-goto-sibling t))
-	  (when (org-current-is-todo)
-	    (setq should-skip-entry t))))
-      (when should-skip-entry
-	(or (outline-next-heading)
-	    (goto-char (point-max))))))
-
-  (defun org-current-is-todo ()
-    (string= "TODO" (org-get-todo-state)))
-#+end_src
-** flyspell
-#+begin_src emacs-lisp
-  (add-hook 'org-mode-hook 'turn-on-flyspell)
-  (add-hook 'markdown-mode-hook 'turn-on-flyspell)
-#+end_src
 * theme
 #+begin_src emacs-lisp
   (use-package gruber-darker-theme
     :ensure t
     :config
-    (load-theme 'gruber-darker t))
-  (set-face-attribute 'default nil :font "DejaVu Sans Mono" :height 190)
+    (load-theme 'gruber-darker t)
+    :custom-face
+    (default ((nil (:font "DejaVu Sans Mono" :height 190)))))
 #+end_src
 * projectile
 #+begin_src emacs-lisp
   (use-package projectile
     :ensure t
+    :bind
+    (:map projectile-mode-map
+	  ("C-c p" . projectile-command-map)))
     :config
-    (projectile-mode +1)
-    (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
+    (projectile-mode 1)
 #+end_src
 * dashboard
 #+BEGIN_SRC emacs-lisp
   (use-package dashboard
     :ensure t
+    :custom
+    ((dashboard-startup-banner 'logo)
+     (dashboard-center-content t)
+     (dashboard-items '((recents . 5)
+			(projects . 5)))))
     :config
     (dashboard-setup-startup-hook)
-    (setq dashboard-startup-banner 'logo)
-    (setq dashboard-center-content t)
-    (setq dashboard-items '((recents . 5)
-			    (projects . 5))))
 #+END_SRC
 * tmp
 set autosave fiels to .tmp folder
@@ -210,24 +199,24 @@ split window and follow
 #+END_SRC
 ** switch window
 #+BEGIN_SRC emacs-lisp
-(use-package switch-window
-  :ensure t
-  :config
-  (setq switch-window-input-style 'minibuffer)
-  (setq switch-window-increase 4)
-  (setq switch-window-threshold 2)
-  (setq switch-window-shortcut-style 'qwerty)
-  (setq switch-window-qwerty-shortcuts
-        '("a" "s" "d" "f" "j" "k" "l"))
-  :bind
-  ([remap other-window] . switch-window))
+  (use-package switch-window
+    :ensure t
+    :custom
+    ((switch-window-input-style 'minibuffer)
+     (switch-window-increase 4)
+     (switch-window-threshold 2)
+     (switch-window-shortcut-style 'qwerty)
+     (switch-window-qwerty-shortcuts
+      '("a" "s" "d" "f" "j" "k" "l")))
+    :bind
+    ([remap other-window] . switch-window))
 #+END_SRC
 
 * which key
 #+BEGIN_SRC emacs-lisp
   (use-package which-key
     :ensure t
-    :init
+    :config
     (which-key-mode))
 #+END_SRC
 * delimiters
@@ -245,9 +234,8 @@ split window and follow
 #+BEGIN_SRC emacs-lisp
   (use-package rainbow-delimiters
     :ensure t
-    :init
-    (progn
-      (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)))
+    :hook
+    ((prog-mode . rainbow-delimiters-mode)))
 #+END_SRC
 ** paren mode
  #+begin_src emacs-lisp
@@ -255,15 +243,14 @@ split window and follow
  #+end_src
 ** paredit
 #+BEGIN_SRC emacs-lisp
-    (use-package paredit
-      :ensure t
-      :config
-      (add-hook 'emacs-lisp-mode-hook #'paredit-mode)
-      ;; enable in the *scratch* buffer
-      (add-hook 'lisp-interaction-mode-hook #'paredit-mode)
-      (add-hook 'ielm-mode-hook #'paredit-mode)
-      (add-hook 'lisp-mode-hook #'paredit-mode)
-      (add-hook 'eval-expression-minibuffer-setup-hook #'paredit-mode))
+  (use-package paredit
+    :ensure t
+    :hook
+    ((emacs-lisp-mode . paredit-mode)
+     (lisp-interaction-mode  . paredit-mode)
+     (ielm-mode . paredit-mode)
+     (lisp-mode . paredit-mode)
+     (eval-expression-minibuffer-setup  . paredit-mode)))
 #+END_SRC
 
 * multiple cursors
@@ -282,31 +269,31 @@ split window and follow
   (use-package helm
     :ensure t
     :bind
-    ("C-x C-f" . 'helm-find-files)
-    ("C-x C-b" . 'helm-buffers-list)
-    ("M-x" . 'helm-M-x)
-    :config
-    (set-face-attribute 'helm-selection nil
-			:background "darkgreen"
-			:foreground "yellow")
-    (setq helm-autoresize-max-height 0
-	  helm-autoresize-min-height 40
-	  helm-M-x-fuzzy-match t
-	  helm-buffers-fuzzy-matching t
-	  helm-recentf-fuzzy-match t
-	  helm-semantic-fuzzy-match t
-	  helm-imenu-fuzzy-match t
-	  helm-split-window-in-side-p nil
-	  helm-move-to-line-cycle-in-source nil
-	  helm-ff-search-library-in-sexp t
-	  helm-scroll-amount 8
-	  helm-echo-input-in-header-line t
-	  history-delete-duplicates t)
-    :init
+    (("C-x C-f" . 'helm-find-files)
+     ("C-x C-b" . 'helm-buffers-list)
+     ("M-x" . 'helm-M-x)
+     :map helm-find-files-map
+     ("C-b" . helm-find-files-up-one-level)
+     ("C-f" . helm-execute-persistent-action))
+    :custom-face
+    (helm-selection ((nil (:background "darkgreen" :foreground "yellow"))))
+    :custom
+    ((helm-autoresize-max-height 0)
+     (helm-autoresize-min-height 40)
+     (helm-M-x-fuzzy-match t)
+     (helm-buffers-fuzzy-matching t)
+     (helm-recentf-fuzzy-match t)
+     (helm-semantic-fuzzy-match t)
+     (helm-imenu-fuzzy-match t)
+     (helm-split-window-in-side-p nil)
+     (helm-move-to-line-cycle-in-source nil)
+     (helm-ff-search-library-in-sexp t)
+     (helm-scroll-amount 8)
+     (helm-echo-input-in-header-line t)
+     (history-delete-duplicates t))
+    :custom
     (helm-mode 1)
-    (helm-autoresize-mode 1)
-    (define-key helm-find-files-map (kbd "C-b") 'helm-find-files-up-one-level)
-    (define-key helm-find-files-map (kbd "C-f") 'helm-execute-persistent-action))
+    (helm-autoresize-mode 1))
 #+END_SRC
 
 * word and line wrap
@@ -317,19 +304,22 @@ split window and follow
 #+BEGIN_SRC emacs-lisp
   (use-package company
     :ensure t
-    :init
-    (add-hook 'after-init-hook 'global-company-mode)
-    :config
-    (define-key company-active-map (kbd "M-n") nil)
-    (define-key company-active-map (kbd "M-p") nil)
-    (define-key company-active-map (kbd "C-n") #'company-select-next)
-    (define-key company-active-map (kbd "C-p") #'company-select-previous))
+    :hook
+    (after-init . global-company-mode)
+    :bind (:map company-active-map
+		("M-n" . nil)
+		("M-n" . nil)
+		("C-n" . company-select-next)
+		("C-p" . company-select-previous)))
 #+END_SRC
 * babel langs
 #+BEGIN_SRC emacs-lisp
   (setq org-confirm-babel-evaluate nil)
   (add-to-list 'org-structure-template-alist
-	       '("el" . "src emacs-lisp"))
+	       '("el" . "src emacs-lisp")
+	       (org-babel-do-load-languages
+		'org-babel-load-languages
+		'((emacs-lisp . t))))
   (add-to-list 'org-structure-template-alist
 	       '("p" . "src python")
 	       (org-babel-do-load-languages
@@ -351,18 +341,16 @@ split window and follow
 * yasnippet
 #+BEGIN_SRC emacs-lisp
   (use-package yasnippet
-    :ensure t)
+    :ensure t
+    :bind (:map yas-minor-mode-map
+	   ("<tab>" . nil)
+	   ("TAB" . nil)
+	   ("<C-tab>" . yas-expand))
+    :config
+    (yas-reload-all)
+    (yas-global-mode 1))
 
   (use-package yasnippet-snippets
-    :ensure t)
-
-  (yas-reload-all)
-  (define-key yas-minor-mode-map (kbd "<tab>") nil)
-  (define-key yas-minor-mode-map (kbd "TAB") nil)
-  (define-key yas-minor-mode-map (kbd "<C-tab>") 'yas-expand)
-  (yas-global-mode 1)
-
-  (use-package common-lisp-snippets
     :ensure t)
 #+END_SRC
 * magit
@@ -412,9 +400,11 @@ split window and follow
 * reveal
 #+begin_src emacs-lisp
   (use-package ox-reveal
-    :ensure t)
-  (setq org-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js")
-  (setq org-reveal-mathjax t)
+    :ensure t
+    :custom
+    (org-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js")
+    (org-reveal-mathjax t))
+
   (use-package htmlize
     :ensure t)
 #+end_src
@@ -452,20 +442,20 @@ split window and follow
   (global-unset-key (kbd "M-m"))
   (use-package flymake
     :ensure t
-    :config
-    (define-key flymake-mode-map (kbd "M-m n") 'flymake-goto-next-error)
-    (define-key flymake-mode-map (kbd "M-m p") 'flymake-goto-prev-error))
+    :bind (:map flymake-mode-map
+		("M-m n" . flymake-goto-next-error)
+		("M-m p" . flymake-goto-prev-error)))
 #+end_src
 * ansi-colors
 #+begin_src emacs-lisp
   (use-package ansi-color
-    :ensure t)
-
-  (defun colorize-compilation-buffer ()
-    (let ((inhibit-read-only t))
-      (ansi-color-apply-on-region (point-min) (point-max))))
-
-  (add-hook 'compilation-filter-hook 'colorize-compilation-buffer)
+    :ensure t
+    :config
+    (defun colorize-compilation-buffer ()
+      (let ((inhibit-read-only t))
+	(ansi-color-apply-on-region (point-min) (point-max))))
+    :hook
+    ((compilation-filter . colorize-compilation-buffer)))
 #+end_src
 * duplicate-line
 #+begin_src emacs-lisp
@@ -494,6 +484,7 @@ emacs garbage collection to stop stuttering on 29.1
 #+begin_src emacs-lisp
   (use-package gcmh
     :demand
+    :load-path "~/.emacs.d/packages/gcmh"
     :hook
     (focus-out-hook . gcmh-idle-garbage-collect)
 
@@ -502,15 +493,15 @@ emacs garbage collection to stop stuttering on 29.1
     (gcmh-high-cons-threshold 104857600)
 
     :config
-    (gcmh-mode +1))
+    (gcmh-mode 1))
 #+end_src
 * move-text
 #+begin_src emacs-lisp
   (use-package move-text
     :ensure t
-    :config
-    (global-set-key (kbd "M-p") 'move-text-up)
-    (global-set-key (kbd "M-n") 'move-text-down))
+    :bind
+    (("M-p" . move-text-up)
+     ("M-n" . move-text-down)))
 #+end_src
 * languages
 ** python
@@ -523,13 +514,12 @@ emacs garbage collection to stop stuttering on 29.1
     :ensure t
     :defer t
     :init
-    (advice-add 'python-mode :before 'elpy-enable))
-
-  (setq python-shell-completion-native-enable nil)
-  (setq elpy-shell-use-project-root t )
-  (setq elpy-rpc-virtualenv-path 'current)
-
-  (setq elpy-shell-starting-directory (quote current-directory))
+    (advice-add 'python-mode :before 'elpy-enable)
+    :custom
+    ((python-shell-completion-native-enable nil)
+     (elpy-shell-use-project-root t )
+     (elpy-rpc-virtualenv-path 'current)
+     (elpy-shell-starting-directory 'current-directory)))
 
   (use-package pyenv-mode
     :ensure t)
@@ -546,32 +536,39 @@ emacs garbage collection to stop stuttering on 29.1
 #+begin_src emacs-lisp
   (use-package markdown-mode
     :ensure t
-    :commands (markdown-mode gfm-mode)
-    :mode (("README\\.md\\'" . gfm-mode)
-	   ("\\.md\\'" . markdown-mode)
-	   ("\\.markdown\\'" . markdown-mode))
-    :init (setq markdown-command "multimarkdown"))
+    :hook
+    ((markdown-mode . turn-on-flyspell))
+    :commands
+    (markdown-mode gfm-mode)
+    :mode
+    (("README\\.md\\'" . gfm-mode)
+     ("\\.md\\'" . markdown-mode)
+     ("\\.markdown\\'" . markdown-mode))
+    :custom
+    ((markdown-command "multimarkdown")))
 #+end_src
 ** verilog
 #+begin_src emacs-lisp
   (use-package verilog-mode
     :ensure t
-    :config
-    (setq verilog-auto-newline nil))
+    :custom
+    ((verilog-auto-newline nil)))
 #+end_src
 ** C
 #+begin_src emacs-lisp
   (use-package c-ts-mode
+    ;; to get yasnippet to work
+    ;; echo "c-mode" > .emacs.d/snippets/c-ts-mode/.yas-parents
     :ensure t
     :mode "\\.c\\'"
     :hook
      ((c-ts-mode . whitespace-handling)
       (c-ts-mode . column-number-mode)
       (c-ts-mode . (lambda () (c-ts-mode-toggle-comment-style -1))))
-     :config
-     (setq c-default-style "linux")
-     (setq c-ts-mode-indent-style 'linux)
-     (setq c-ts-mode-indent-offset 8))
+     :custom
+     ((c-default-style "linux")
+      (c-ts-mode-indent-style 'linux)
+      (c-ts-mode-indent-offset 8)))
 #+end_src
 ** dts
 #+begin_src emacs-lisp
