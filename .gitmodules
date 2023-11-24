@@ -1,3 +1,0 @@
-[submodule "emacs/.emacs.d/packages/gcmh"]
-	path = emacs/.emacs.d/packages/gcmh
-	url = https://github.com/emacsmirror/gcmh

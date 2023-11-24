@@ -12,12 +12,3 @@ clone this repo in your home directory and do the following commands
 cd ~/.dots
 stow bash
 ```
-
-for emacs setup
-
-```bash
-cd ~/.dots
-git submodule init
-git submodule update
-stow emacs
-```

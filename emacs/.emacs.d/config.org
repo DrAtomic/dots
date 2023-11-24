@@ -484,7 +484,7 @@ emacs garbage collection to stop stuttering on 29.1
 #+begin_src emacs-lisp
   (use-package gcmh
     :demand
-    :load-path "~/.emacs.d/packages/gcmh"
+    :ensure t
     :hook
     (focus-out-hook . gcmh-idle-garbage-collect)
 
