@@ -363,18 +363,18 @@ split window and follow
 * lsp
 #+begin_src emacs-lisp
   (use-package lsp-mode
-    :ensure t
-    :hook
-    (c-ts-mode . lsp)
-    (lsp-mode . lsp-enable-which-key-integration)
-    :config
     ;; to stop the annoying inlay hints
     ;; .clangd
     ;; -------
     ;; InlayHints:
     ;;   Enabled: No
     ;; ---------
-    (setq eldoc-echo-area-use-multiline-p nil))
+    :ensure t
+    :hook
+    (c-ts-mode . lsp)
+    (lsp-mode . lsp-enable-which-key-integration)
+    :custom
+    ((eldoc-echo-area-use-multiline-p nil)))
 
   (use-package lsp-ui
     :ensure t)
@@ -557,17 +557,17 @@ emacs garbage collection to stop stuttering on 29.1
 ** C
 #+begin_src emacs-lisp
   (use-package c-ts-mode
-    ;; to get yasnippet to work
-    ;; echo "c-mode" > .emacs.d/snippets/c-ts-mode/.yas-parents
+    ;; fork of c-ts-mode until my patch gets in
+    :load-path "./packages/c-ts-mode"
     :ensure t
     :mode "\\.c\\'"
     :hook
      ((c-ts-mode . whitespace-handling)
       (c-ts-mode . column-number-mode)
+      (c-ts-mode . (lambda () (c-ts-mode-set-style 'linux)))
       (c-ts-mode . (lambda () (c-ts-mode-toggle-comment-style -1))))
      :custom
-     ((c-default-style "linux")
-      (c-ts-mode-indent-style 'linux)
+     ((c-ts-mode-indent-style 'linux)
       (c-ts-mode-indent-offset 8)))
 #+end_src
 ** dts
