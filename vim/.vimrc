@@ -1,5 +1,5 @@
 set number
 set relativenumber
 set clipboard=unnamedplus
-set termguicolors
 syntax on
+set term=xterm-256color
