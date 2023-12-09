@@ -374,7 +374,13 @@ split window and follow
     (c-ts-mode . lsp)
     (lsp-mode . lsp-enable-which-key-integration)
     :custom
-    ((eldoc-echo-area-use-multiline-p nil)))
+    ((eldoc-echo-area-use-multiline-p nil)
+     (lsp-headerline-breadcrumb-enable nil)
+     (lsp-enable-indentation nil)
+     (lsp-enable-on-type-formatting nil)
+     (lsp-modeline-code-actions-enable nil)
+     (lsp-modeline-diagnostics-enable nil)
+     (lsp-clients-clangd-args '("--header-insertion=never"))))
 
   (use-package lsp-ui
     :ensure t)
