@@ -383,10 +383,11 @@ split window and follow
     :ensure t
     :hook
     (c-ts-mode . lsp)
+    (c++-ts-mode . lsp)
+    (verilog-ts-mode . lsp)
     (lsp-mode . lsp-enable-which-key-integration)
     :custom
     ((eldoc-echo-area-use-multiline-p nil)
-     (lsp-headerline-breadcrumb-enable nil)
      (lsp-enable-indentation nil)
      (lsp-enable-on-type-formatting nil)
      (lsp-modeline-code-actions-enable nil)
@@ -566,10 +567,40 @@ emacs garbage collection to stop stuttering on 29.1
 #+end_src
 ** verilog
 #+begin_src emacs-lisp
-  (use-package verilog-mode
+  (use-package verilog-ts-mode
     :ensure t
+    :mode "\\.sv\\'"
     :custom
     ((verilog-auto-newline nil)))
+
+  (use-package verilog-ext
+    :ensure t
+     :init
+    ;; Can also be set through `M-x RET customize-group RET verilog-ext':
+    ;; Comment out/remove the ones you do not need
+    (setq verilog-ext-feature-list
+	  '(font-lock
+	    xref
+	    capf
+	    hierarchy
+	    eglot
+	    lsp
+	    flycheck
+	    beautify
+	    navigation
+	    template
+	    formatter
+	    compilation
+	    imenu
+	    which-func
+	    hideshow
+	    typedefs
+	    time-stamp
+	    block-end-comments
+	    ports))
+    :config
+    (verilog-ext-mode-setup)
+    (verilog-ext-lsp-set-server 've-svlangserver))
 #+end_src
 ** C
 #+begin_src emacs-lisp
@@ -580,12 +611,19 @@ emacs garbage collection to stop stuttering on 29.1
     :mode "\\.c\\'"
     :hook
      ((c-ts-mode . whitespace-handling)
+      (c++-ts-mode . whitespace-handling)
       (c-ts-mode . column-number-mode)
+      (c++-ts-mode . column-number-mode)
       (c-ts-mode . (lambda () (c-ts-mode-set-style 'linux)))
       (c-ts-mode . (lambda () (c-ts-mode-toggle-comment-style -1))))
      :custom
      ((c-ts-mode-indent-style 'linux)
       (c-ts-mode-indent-offset 8)))
+#+end_src
+** cpp
+#+begin_src emacs-lisp
+  (add-to-list 'major-mode-remap-alist '(c++-mode . c++-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.s?vh?\\'" . verilog-ts-mode))
 #+end_src
 ** dts
 #+begin_src emacs-lisp
