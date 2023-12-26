@@ -7,12 +7,6 @@
 
 stty -ixon
 
-export PATH="$HOME/.local/bin:$PATH"
-XDG_CONFIG_HOME="$HOME/.config"
-export XDG_CONFIG_HOME
-export VISUAL=vim
-export EDITOR="$VISUAL"
-
 parse_git_branch() {
      git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/[\1]/'
 }
