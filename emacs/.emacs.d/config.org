@@ -392,6 +392,8 @@ split window and follow
      (lsp-enable-on-type-formatting nil)
      (lsp-modeline-code-actions-enable nil)
      (lsp-modeline-diagnostics-enable nil)
+     (lsp-diagnostics-provider :none)
+     (lsp-ui-sidline-enable nil)
      (lsp-clients-clangd-args '("--header-insertion=never"))))
 
   (use-package lsp-ui
