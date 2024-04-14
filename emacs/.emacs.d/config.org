@@ -622,6 +622,17 @@ emacs garbage collection to stop stuttering on 29.1
      ((c-ts-mode-indent-style 'linux)
       (c-ts-mode-indent-offset 8)))
 #+end_src
+** ada
+#+begin_src emacs-lisp
+  (use-package ada-mode
+    :load-path "./packages/old-ada-mode"
+    :ensure t
+    :mode
+    (("\\.gpr\\'" . ada-mode)
+   ("\\.ada\\'" . ada-mode)
+   ("\\.ads\\'" . ada-mode)
+   ("\\.adb\\'" . ada-mode)))
+#+end_src
 ** cpp
 #+begin_src emacs-lisp
   (add-to-list 'major-mode-remap-alist '(c++-mode . c++-ts-mode))
