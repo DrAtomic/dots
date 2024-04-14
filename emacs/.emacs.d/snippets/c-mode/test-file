@@ -1,0 +1,44 @@
+# -*- mode: snippet -*-
+# name: testfile
+# key: testfile
+# --
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include "check.h"
+
+static void setup(void)
+{
+	printf("setup called\n");
+}
+
+static void teardown(void)
+{
+	printf("teardown called\n");
+}
+
+START_TEST(test_$1)
+{
+	int ret = -1;
+	ck_assert_int_eq(ret, 0);
+	$0
+
+} END_TEST
+
+int main(void)
+{
+	Suite *s = suite_create("${2:`(file-name-nondirectory (file-name-sans-extension (or (buffer-file-name) "")))`}");
+
+	TCase *tc_call = tcase_create("$2");
+	tcase_add_checked_fixture(tc_call, setup, teardown);
+	tcase_add_test(tc_call, test_$1);
+
+	suite_add_tcase(s, tc_call);
+
+	SRunner *sr = srunner_create(s);
+	srunner_set_fork_status(sr, CK_NOFORK);
+	srunner_run_all(sr, CK_NORMAL);
+	int number_failed = srunner_ntests_failed(sr);
+	srunner_free(sr);
+	return (number_failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
+}

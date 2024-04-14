@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: ctest
+# key: ctest
+# --
+set(TEST_SOURCES
+  $1/test_$2.c
+  )
+add_executable($2 \${TEST_SOURCES})
+target_link_libraries($2 \${LIBS})
+add_test($2 \${TESTS_BINARY_DIR}/$2)
