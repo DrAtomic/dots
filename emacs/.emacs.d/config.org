@@ -119,10 +119,11 @@
 #+END_SRC
 * theme
 #+begin_src emacs-lisp
-  (use-package gruber-darker-theme
+  (use-package zenburn-theme
+    :load-path "./packages/zenburn"
     :ensure t
     :config
-    (load-theme 'gruber-darker t)
+    (load-theme 'zenburn t)
     :custom-face
     (default ((nil (:font "DejaVu Sans Mono" :height 190)))))
 #+end_src
