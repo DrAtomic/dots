@@ -611,7 +611,8 @@ emacs garbage collection to stop stuttering on 29.1
     ;; fork of c-ts-mode until my patch gets in
     :load-path "./packages/c-ts-mode"
     :ensure t
-    :mode "\\.c\\'"
+    :mode (("\\.c\\'" . c-ts-mode)
+	   ("\\.h\\'" . c-ts-mode))
     :hook
      ((c-ts-mode . whitespace-handling)
       (c++-ts-mode . whitespace-handling)
