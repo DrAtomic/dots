@@ -17,7 +17,7 @@ LIGHTBLUE='\033[38;5;123m'
 SALMON='\033[38;5;209m'
 NONE='\033[0m'
 
-export PS1="${YELLOW}[\h]${SEAFOAM}[\u]${LIGHTBLUE}[\w]${SALMON}\$(parse_git_branch)${NONE}\n: "
+export PS1="${YELLOW}[\h]${SEAFOAM}[\u]${LIGHTBLUE}[\w]${SALMON}\$(parse_git_branch)${NONE}\n$ "
 
 if [ -e ~/.bash_aliases ]; then
     source ~/.bash_aliases
