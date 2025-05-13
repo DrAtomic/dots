@@ -87,11 +87,9 @@
     :ensure t)
   (use-package emacsql
     :ensure t)
-  (use-package emacsql-sqlite-module
-    :ensure t)
   (use-package org-roam
     :ensure t
-    :after (dash f s org emacsql emacsql-sqlite-module)
+    :after (dash f s org emacsql)
     :custom
     (org-roam-directory  "~/Notes")
     (org-roam-complete-everywhere t)
@@ -232,16 +230,6 @@ split window and follow
     (which-key-mode))
 #+END_SRC
 * delimiters
-** electric pairs
-#+BEGIN_SRC emacs-lisp
-  (setq electric-pair-pairs '(
-			      (?\{ . ?\})
-			      (?\[ . ?\])
-			      (?\" . ?\")
-			      (?\( . ?\))
-			      ))
-  (electric-pair-mode 1)
-#+END_SRC
 ** rainbow delimiters
 #+BEGIN_SRC emacs-lisp
   (use-package rainbow-delimiters
@@ -385,7 +373,6 @@ split window and follow
     :hook
     (c-ts-mode . lsp)
     (c++-ts-mode . lsp)
-    (verilog-ts-mode . lsp)
     (lsp-mode . lsp-enable-which-key-integration)
     :custom
     ((eldoc-echo-area-use-multiline-p nil)
@@ -498,7 +485,9 @@ split window and follow
 #+begin_src emacs-lisp
   (global-set-key (kbd "<f5>") 'projectile-compile-project)
   (setq compilation-scroll-output t)
-  (add-hook 'compilation-finish-functions 'switch-to-buffer-other-window 'compilation)
+  (setq compilation-skip-threshold 2)
+  (setq compilation-scroll-output 'first-error)
+  (setq compilation-auto-jump-to-first-error t)
 #+end_src
 * gcmh
 emacs garbage collection to stop stuttering on 29.1
@@ -568,43 +557,6 @@ emacs garbage collection to stop stuttering on 29.1
     :custom
     ((markdown-command "multimarkdown")))
 #+end_src
-** verilog
-#+begin_src emacs-lisp
-  (use-package verilog-ts-mode
-    :ensure t
-    :mode "\\.sv\\'"
-    :custom
-    ((verilog-auto-newline nil)))
-
-  (use-package verilog-ext
-    :ensure t
-     :init
-    ;; Can also be set through `M-x RET customize-group RET verilog-ext':
-    ;; Comment out/remove the ones you do not need
-    (setq verilog-ext-feature-list
-	  '(font-lock
-	    xref
-	    capf
-	    hierarchy
-	    eglot
-	    lsp
-	    flycheck
-	    beautify
-	    navigation
-	    template
-	    formatter
-	    compilation
-	    imenu
-	    which-func
-	    hideshow
-	    typedefs
-	    time-stamp
-	    block-end-comments
-	    ports))
-    :config
-    (verilog-ext-mode-setup)
-    (verilog-ext-lsp-set-server 've-svlangserver))
-#+end_src
 ** C
 #+begin_src emacs-lisp
   (use-package c-ts-mode
@@ -612,7 +564,8 @@ emacs garbage collection to stop stuttering on 29.1
     :load-path "./packages/c-ts-mode"
     :ensure t
     :mode (("\\.c\\'" . c-ts-mode)
-	   ("\\.h\\'" . c-ts-mode))
+	   ("\\.h\\'" . c-ts-mode)
+	   ("\\.cc\\'" . c-ts-mode))
     :hook
      ((c-ts-mode . whitespace-handling)
       (c++-ts-mode . whitespace-handling)
@@ -638,7 +591,6 @@ emacs garbage collection to stop stuttering on 29.1
 ** cpp
 #+begin_src emacs-lisp
   (add-to-list 'major-mode-remap-alist '(c++-mode . c++-ts-mode))
-  (add-to-list 'auto-mode-alist '("\\.s?vh?\\'" . verilog-ts-mode))
 #+end_src
 ** dts
 #+begin_src emacs-lisp
