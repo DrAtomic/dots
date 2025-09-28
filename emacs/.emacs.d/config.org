@@ -8,6 +8,7 @@
     (package-refresh-contents)
     (package-install 'use-package))
   (unbind-key "C-x C-k")
+  (add-to-list 'initial-frame-alist '(fullscreen . maximized))
   (add-to-list 'default-frame-alist '(fullscreen . maximized))
 #+end_src
 * treesit
