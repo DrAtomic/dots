@@ -589,6 +589,17 @@ emacs garbage collection to stop stuttering on 29.1
    ("\\.ads\\'" . ada-mode)
    ("\\.adb\\'" . ada-mode)))
 #+end_src
+
+** vhdl
+#+begin_src emacs-lisp
+(add-to-list 'compilation-error-regexp-alist-alist
+             '(ghdl-warning
+               "^\\([^:\n]+\\):\\([0-9]+\\):\\([0-9]+\\):warning:"
+               1 2 3 1))
+
+(add-to-list 'compilation-error-regexp-alist 'ghdl-warning)
+
+#+end_src
 ** cpp
 #+begin_src emacs-lisp
   (add-to-list 'major-mode-remap-alist '(c++-mode . c++-ts-mode))
