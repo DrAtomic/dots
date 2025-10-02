@@ -591,6 +591,7 @@ emacs garbage collection to stop stuttering on 29.1
 #+end_src
 
 ** vhdl
+remove all the annoying compilation jumps
 #+begin_src emacs-lisp
 (add-to-list 'compilation-error-regexp-alist-alist
              '(ghdl-warning
@@ -598,6 +599,25 @@ emacs garbage collection to stop stuttering on 29.1
                1 2 3 1))
 
 (add-to-list 'compilation-error-regexp-alist 'ghdl-warning)
+
+(add-to-list 'compilation-error-regexp-alist-alist
+             '(yosys-info-on-colon-num
+               "^[A-Z][A-Za-z_ ]+ \\(?:[^:\n]+\\):[0-9]+\\b[^:\n]*\\(warning:\\|error:\\)?"
+               nil nil nil 0))
+
+(add-to-list 'compilation-error-regexp-alist-alist
+             '(yosys-info-internal-cc
+               "^[A-Z][A-Za-z_ ]+ .*\\.cc:[0-9]+:.*$"
+               nil nil nil 0))
+
+(add-to-list 'compilation-error-regexp-alist-alist
+             '(yosys-info-removed-bits
+               "^Removed top [0-9]+ bits .*"
+               nil nil nil 0))
+
+(dolist (sym '(yosys-info-on-colon-num yosys-info-internal-cc yosys-info-removed-bits))
+  (add-to-list 'compilation-error-regexp-alist sym))
+
 
 #+end_src
 ** cpp
